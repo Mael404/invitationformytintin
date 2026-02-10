@@ -3,31 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Valentine ❤️</title>
+    <title>Be My Valentine? 🌹</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
     <div class="container">
-        <div class="bg-hearts"></div>
+        
+        <h1 class="header-text">Hey Beautiful! 🌹</h1>
+        
+        <div class="gif-container">
+            <img src="https://media1.tenor.com/m/hnMCc0y5V90AAAAC/mocha-bear.gif" alt="Cute Bear" class="main-gif">
+        </div>
 
-        <div class="card">
-            <div class="gif-container">
-                <img id="mascot" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmZ4Y29tN2N4a2c5a2c5a2c5a2c5a2c5a2c5a2c5a2c5/g5Oq4Z1Z9/giphy.gif" alt="Cute Bear">
+        <div class="gallery-wrapper">
+            <p class="instruction">Swipe to see us! 📸</p>
+            <div class="gallery-container">
+                <img src="1.jpg" alt="Memory 1" class="photo">
+                <img src="2.jpg" alt="Memory 2" class="photo">
+                <img src="1.jpg" alt="Memory 3" class="photo">
+                <img src="2.jpg" alt="Memory 4" class="photo">
+                <img src="1.jpg" alt="Memory 5" class="photo">
+                <img src="2.jpg" alt="Memory 6" class="photo">
             </div>
+        </div>
 
-            <h1 id="question">Will you be my Valentine? 🌹</h1>
-            <p id="sub-text">Please say yes! 🥺</p>
-
+        <div class="question-area">
+            <h2 id="question">Will you be my Valentine?</h2>
             <div class="buttons">
                 <button id="yes-btn">YES! 😍</button>
                 <button id="no-btn">No 😢</button>
             </div>
         </div>
+
     </div>
 
+    <div class="bg-hearts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

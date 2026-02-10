@@ -1,76 +1,81 @@
 const yesBtn = document.getElementById('yes-btn');
 const noBtn = document.getElementById('no-btn');
 const question = document.getElementById('question');
-const subtext = document.getElementById('sub-text');
-const mascot = document.getElementById('mascot');
+const mainGif = document.querySelector('.main-gif');
 
-// Variables to track button size
+// Variable to keep track of button size
 let yesScale = 1;
 
-// Function to move the "No" button randomly
+// Function to move the "No" button
 function moveButton() {
-    // Get the viewport dimensions (the screen size)
-    const containerRect = document.querySelector('.container').getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
-    
-    // Calculate random position within the visible screen
-    // We limit it slightly so it doesn't go off-screen entirely
-    const maxX = window.innerWidth - btnRect.width - 20;
-    const maxY = window.innerHeight - btnRect.height - 20;
+    // Get screen width and height
+    const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
+    const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
 
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
+    // Generate random coordinates
+    const randomX = Math.random() * maxWidth;
+    const randomY = Math.random() * maxHeight;
 
-    // Apply the new position
-    noBtn.style.position = 'fixed'; // Takes it out of the flow
+    // Apply new position
+    noBtn.style.position = 'fixed'; // Break out of flow
     noBtn.style.left = randomX + 'px';
     noBtn.style.top = randomY + 'px';
 
-    // Grow the Yes button slightly every time she tries to click No
-    yesScale += 0.2;
+    // Make the "Yes" button grow every time she misses "No"
+    yesScale += 0.15;
     yesBtn.style.transform = `scale(${yesScale})`;
 }
 
-// Event Listeners for "No" button (Desktop hover & Mobile touch)
+// Event Listeners
+// 'mouseover' for desktop, 'touchstart' for iPhone
 noBtn.addEventListener('mouseover', moveButton);
-noBtn.addEventListener('touchstart', moveButton); // For iPhone touch
-
-// What happens when she clicks "Yes"
-yesBtn.addEventListener('click', () => {
-    // 1. Change the text
-    question.innerHTML = "Yay! See you on the 14th! 💖";
-    subtext.innerHTML = "I knew you'd say yes! 🥰";
-    
-    // 2. Change the GIF to a happy one
-    // Using a specific happy bear GIF
-    mascot.src = "https://media.giphy.com/media/T86i6yDyOYz7J6v9uh/giphy.gif"; 
-    
-    // 3. Hide the buttons
-    document.querySelector('.buttons').style.display = 'none';
-
-    // 4. Trigger Confetti
-    launchConfetti();
+noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevents double-firing on some phones
+    moveButton();
 });
 
-function launchConfetti() {
-    var duration = 3 * 1000;
-    var animationEnd = Date.now() + duration;
-    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+// Yes Button Click Action
+yesBtn.addEventListener('click', () => {
+    // 1. Change the text
+    question.innerHTML = "YAY! I Love You! 💖";
+    
+    // 2. Change the GIF to the happy one
+    mainGif.src = "https://media1.tenor.com/m/I7QkQkK2MQQAAAAC/cute-love-bear.gif";
 
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+    // 3. Hide the No button
+    noBtn.style.display = 'none';
 
-    var interval = setInterval(function() {
-      var timeLeft = animationEnd - Date.now();
+    // 4. Reset Yes button scale
+    yesBtn.style.transform = 'scale(1)';
 
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
+    // 5. Trigger Confetti
+    triggerConfetti();
+});
 
-      var particleCount = 50 * (timeLeft / duration);
-      
-      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-    }, 250);
+// Confetti Effect Function
+function triggerConfetti() {
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    // Launch confetti from edges
+    (function frame() {
+        confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#ff4d6d', '#ff758f', '#fff']
+        });
+        confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#ff4d6d', '#ff758f', '#fff']
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
 }

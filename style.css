@@ -7,91 +7,131 @@
 
 body {
     font-family: 'Nunito', sans-serif;
-    background-color: #ffe6e6; /* Soft pink background */
-    height: 100vh;
-    overflow: hidden; /* Prevents scrolling */
+    background: linear-gradient(180deg, #ffe6e6 0%, #ffc2d1 100%);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-x: hidden; /* Prevent body scrolling sideways */
 }
 
-/* Floating Hearts Background Animation */
-.bg-hearts {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('https://cdn-icons-png.flaticon.com/512/210/210545.png');
-    background-size: 50px;
-    opacity: 0.1;
-    animation: float 20s linear infinite;
-}
-
-@keyframes float {
-    0% { background-position: 0 0; }
-    100% { background-position: 100% 100%; }
-}
-
-/* Card Container */
 .container {
     text-align: center;
-    width: 90%;
-    max-width: 400px; /* Limits width on larger screens */
-    position: relative;
+    width: 100%;
+    max-width: 400px; /* Fits iPhone XR nicely */
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     z-index: 10;
+    position: relative;
 }
 
-.gif-container img {
-    width: 150px;
-    height: auto;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    transition: transform 0.3s ease;
-}
-
-h1 {
+/* Header */
+.header-text {
     font-family: 'Fredoka One', cursive;
     color: #ff4d6d;
     font-size: 2rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px white;
 }
 
-p {
-    color: #590d22;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
+/* Main GIF */
+.main-gif {
+    width: 160px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* --- THE GALLERY (FIXED) --- */
+.gallery-wrapper {
+    width: 100%;
+}
+
+.instruction {
+    font-size: 0.9rem;
+    color: #ff758f;
+    opacity: 0.8;
+    margin-bottom: 5px;
+}
+
+.gallery-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;          /* Enables side scrolling */
+    padding: 10px 5px;
+    width: 100%;
+    scroll-snap-type: x mandatory; /* Makes photos snap to center */
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iPhone */
+    
+    /* Hide scrollbars */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+
+.gallery-container::-webkit-scrollbar {
+    display: none;
+}
+
+.photo {
+    /* Fixed width is crucial for horizontal scroll */
+    min-width: 220px;
+    height: 280px;
+    
+    /* PREVENTS SQUISHING - The most important line! */
+    flex-shrink: 0; 
+    
+    object-fit: cover;
+    border-radius: 10px;
+    border: 6px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    scroll-snap-align: center;
+    transition: transform 0.3s ease;
+}
+
+/* Fun tilt angles */
+.photo:nth-child(odd) { transform: rotate(-3deg); }
+.photo:nth-child(even) { transform: rotate(3deg); }
+
+/* --------------------------- */
+
+.question-area {
+    margin-top: 10px;
+}
+
+h2 {
+    color: #a4133c;
+    font-family: 'Fredoka One', cursive;
+    margin-bottom: 15px;
 }
 
 /* Buttons */
 .buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    position: relative; /* Important for the No button movement */
-    min-height: 60px;
+    gap: 15px;
+    position: relative;
+    height: 60px; /* Reserve space so layout doesn't jump */
 }
 
 button {
-    padding: 12px 24px;
+    padding: 12px 25px;
     font-size: 1.1rem;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     font-weight: bold;
-    transition: transform 0.2s, box-shadow 0.2s;
     font-family: 'Nunito', sans-serif;
-    /* Disable text selection so she can't highlight the button text */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: all 0.2s;
+    user-select: none; /* Prevents highlighting text on mobile tap */
     -webkit-user-select: none;
-    user-select: none;
 }
 
 #yes-btn {
     background-color: #ff4d6d;
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+    z-index: 20; /* Keep YES on top */
 }
 
 #yes-btn:active {
@@ -101,12 +141,25 @@ button {
 #no-btn {
     background-color: white;
     color: #ff4d6d;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    position: relative; /* Allows it to move around */
+    z-index: 10;
 }
 
-/* Mobile specific adjustment for iPhone XR */
-@media (max-width: 480px) {
-    h1 { font-size: 1.8rem; }
-    img { width: 130px; }
+/* Background Hearts Animation */
+.bg-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/210/210545.png');
+    background-size: 60px;
+    opacity: 0.05;
+    animation: float 25s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 100%; }
 }
