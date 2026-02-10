@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -12,153 +12,134 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow-x: hidden; /* Prevent body scrolling sideways */
+    overflow-x: hidden;
+    transition: background 0.5s ease;
 }
 
-.container {
-    text-align: center;
-    width: 100%;
-    max-width: 400px; /* Fits iPhone XR nicely */
-    padding: 20px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 10;
-    position: relative;
+/* Celebration Animation Class */
+body.celebrate {
+    animation: backgroundPulse 1s infinite alternate;
 }
 
-/* Header */
-.header-text {
+@keyframes backgroundPulse {
+    0% { background: linear-gradient(180deg, #ffe6e6 0%, #ffc2d1 100%); }
+    100% { background: linear-gradient(180deg, #ff99ac 0%, #ff4d6d 100%); }
+}
+
+/* Utilities */
+.hidden { display: none !important; }
+
+/* ENVELOPE STYLES */
+#envelope-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100;
+}
+.envelope-wrapper {
+    position: relative; width: 250px; height: 180px;
+    cursor: pointer; animation: bounce 2s infinite;
+}
+.envelope-body {
+    position: absolute; bottom: 0; width: 100%; height: 100%;
+    background-color: #ff4d6d; border-radius: 0 0 10px 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.envelope-flap {
+    position: absolute; top: 0; left: 0; width: 0; height: 0;
+    border-left: 125px solid transparent; border-right: 125px solid transparent;
+    border-top: 100px solid #ff758f;
+    z-index: 5;
+}
+.heart-seal {
+    position: absolute; top: 40px; left: 50%;
+    transform: translateX(-50%); font-size: 3rem; z-index: 6;
+}
+.open-msg {
+    position: absolute; bottom: -40px; width: 100%;
+    text-align: center; font-weight: bold; color: #a4133c;
     font-family: 'Fredoka One', cursive;
-    color: #ff4d6d;
-    font-size: 2rem;
-    text-shadow: 2px 2px white;
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
-/* Main GIF */
-.main-gif {
-    width: 160px;
-    height: auto;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* POPUP STYLES */
+#popup-message {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); display: flex;
+    justify-content: center; align-items: center; z-index: 200;
+    backdrop-filter: blur(5px);
+}
+.popup-content {
+    background: white; padding: 30px; border-radius: 20px;
+    text-align: center; width: 85%; max-width: 350px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: popIn 0.5s ease;
+}
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.popup-content h2 { color: #ff4d6d; font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
+.popup-content p { color: #590d22; margin-bottom: 20px; line-height: 1.5; }
+#reveal-btn {
+    background: #ff4d6d; color: white; padding: 10px 20px;
+    border: none; border-radius: 50px; font-size: 1rem;
+    cursor: pointer; font-family: 'Fredoka One', cursive;
 }
 
-/* --- THE GALLERY (FIXED) --- */
-.gallery-wrapper {
-    width: 100%;
+/* MAIN PAGE */
+.container {
+    text-align: center; width: 100%; max-width: 400px;
+    padding: 20px 10px; display: flex; flex-direction: column;
+    gap: 15px; z-index: 10; animation: fadeIn 1s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.instruction {
-    font-size: 0.9rem;
-    color: #ff758f;
-    opacity: 0.8;
-    margin-bottom: 5px;
-}
+.header-text { font-family: 'Fredoka One', cursive; color: #ff4d6d; font-size: 2rem; text-shadow: 2px 2px white; }
+.main-gif { width: 160px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
+/* Gallery */
+.gallery-wrapper { width: 100%; }
+.instruction { font-size: 0.9rem; color: #ff758f; margin-bottom: 5px; }
 .gallery-container {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;          /* Enables side scrolling */
-    padding: 10px 5px;
-    width: 100%;
-    scroll-snap-type: x mandatory; /* Makes photos snap to center */
-    -webkit-overflow-scrolling: touch; /* Smooth scroll on iPhone */
-    
-    /* Hide scrollbars */
-    scrollbar-width: none; 
-    -ms-overflow-style: none;
+    display: flex; gap: 15px; overflow-x: auto; padding: 10px 5px;
+    width: 100%; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
-
-.gallery-container::-webkit-scrollbar {
-    display: none;
-}
-
+.gallery-container::-webkit-scrollbar { display: none; }
 .photo {
-    /* Fixed width is crucial for horizontal scroll */
-    min-width: 220px;
-    height: 280px;
-    
-    /* PREVENTS SQUISHING - The most important line! */
-    flex-shrink: 0; 
-    
-    object-fit: cover;
-    border-radius: 10px;
-    border: 6px solid white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    scroll-snap-align: center;
-    transition: transform 0.3s ease;
+    min-width: 220px; height: 280px; flex-shrink: 0;
+    object-fit: cover; border-radius: 10px; border: 6px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15); scroll-snap-align: center;
 }
-
-/* Fun tilt angles */
 .photo:nth-child(odd) { transform: rotate(-3deg); }
 .photo:nth-child(even) { transform: rotate(3deg); }
 
-/* --------------------------- */
-
-.question-area {
-    margin-top: 10px;
-}
-
-h2 {
-    color: #a4133c;
-    font-family: 'Fredoka One', cursive;
-    margin-bottom: 15px;
-}
-
-/* Buttons */
-.buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    position: relative;
-    height: 60px; /* Reserve space so layout doesn't jump */
-}
-
+/* Question Area */
+.question-area { margin-top: 10px; }
+h2 { color: #a4133c; font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
+.buttons { display: flex; justify-content: center; gap: 15px; position: relative; height: 60px; }
 button {
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    font-family: 'Nunito', sans-serif;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: all 0.2s;
-    user-select: none; /* Prevents highlighting text on mobile tap */
-    -webkit-user-select: none;
+    padding: 12px 25px; font-size: 1.1rem; border: none;
+    border-radius: 50px; cursor: pointer; font-weight: bold;
+    font-family: 'Nunito', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    -webkit-user-select: none; user-select: none;
 }
+#yes-btn { background-color: #ff4d6d; color: white; z-index: 20; }
+#no-btn { background-color: white; color: #ff4d6d; z-index: 10; }
 
-#yes-btn {
-    background-color: #ff4d6d;
-    color: white;
-    z-index: 20; /* Keep YES on top */
-}
-
-#yes-btn:active {
-    transform: scale(0.95);
-}
-
-#no-btn {
-    background-color: white;
-    color: #ff4d6d;
-    z-index: 10;
-}
-
-/* Background Hearts Animation */
+/* Hearts BG */
 .bg-hearts {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('https://cdn-icons-png.flaticon.com/512/210/210545.png');
-    background-size: 60px;
-    opacity: 0.05;
-    animation: float 25s linear infinite;
-    pointer-events: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; background-image: url('https://cdn-icons-png.flaticon.com/512/210/210545.png');
+    background-size: 60px; opacity: 0.05; animation: float 25s linear infinite; pointer-events: none;
 }
-
 @keyframes float {
     0% { background-position: 0 0; }
     100% { background-position: 100% 100%; }
