@@ -29,7 +29,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Allow vertical scrolling on body, hide horizontal */
             overflow-x: hidden; 
             overflow-y: auto;
             color: #5a003a;
@@ -175,7 +174,8 @@
         #main-page {
             width: 100%; max-width: 500px; padding: 20px;
             display: flex; flex-direction: column; align-items: center; animation: fadeIn 1s ease;
-            padding-bottom: 50px;
+            /* CRITICAL: Space at bottom so scrolling works */
+            padding-bottom: 50px; 
         }
         
         @keyframes fadeIn {
@@ -199,7 +199,8 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); object-fit: cover;
         }
         
-        .gallery-section { width: 100%; margin: 25px 0; }
+        /* ===== GALLERY STYLES (PC & MOBILE) ===== */
+        .gallery-section { width: 100%; margin: 25px 0; position: relative; }
         
         .section-title {
             font-family: 'Dancing Script', cursive; color: var(--pink-deep);
@@ -211,11 +212,18 @@
             font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         
+        /* The container for images */
         .gallery-container {
-            display: flex; gap: 15px; overflow-x: auto; padding: 15px 10px;
-            scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+            display: flex; 
+            gap: 15px; 
+            overflow-x: auto; 
+            padding: 15px 10px;
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch; 
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+            scroll-behavior: smooth; /* Smooth for button clicks */
         }
-        .gallery-container::-webkit-scrollbar { display: none; }
+        .gallery-container::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
         
         .photo {
             min-width: 220px; height: 280px; flex-shrink: 0; object-fit: cover;
@@ -228,6 +236,28 @@
         .photo:nth-child(odd) { transform: rotate(-2deg); }
         .photo:nth-child(even) { transform: rotate(2deg); }
         
+        /* NAV BUTTONS (Hidden on Mobile by default) */
+        .nav-btn {
+            display: none; /* Hidden on mobile */
+            position: absolute;
+            top: 60%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--pink-heart);
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { background: white; transform: translateY(-50%) scale(1.1); }
+        .prev-btn { left: 0; }
+        .next-btn { right: 0; }
+
+        /* ===== QUESTION AREA ===== */
         .question-area {
             background: var(--white); padding: 25px; border-radius: 25px;
             text-align: center; width: 100%; margin-top: 20px;
@@ -334,10 +364,8 @@
             position: relative; width: 90%; max-width: 500px;
             background: white; padding: 20px; border-radius: 20px;
             text-align: center; animation: zoomIn 0.3s ease;
-            
-            /* SCROLL FIX HERE */
-            max-height: 90vh; /* Don't be taller than 90% of screen */
-            overflow-y: auto; /* Allow scrolling if content is long */
+            max-height: 90vh; 
+            overflow-y: auto; 
             display: flex; flex-direction: column; align-items: center;
         }
         
@@ -363,7 +391,28 @@
             z-index: 10;
         }
         
-        /* ===== RESPONSIVE STYLES ===== */
+        /* ===== RESPONSIVE STYLES (PC VS MOBILE) ===== */
+        
+        /* PC / Tablet Rules (Min-width 768px) */
+        @media (min-width: 768px) {
+            #main-page { max-width: 900px; } /* Wider container */
+            
+            .header-text { font-size: 4rem; }
+            .main-gif { width: 250px; height: 250px; }
+            
+            /* Show Nav Buttons on PC */
+            .nav-btn { display: flex; align-items: center; justify-content: center; }
+            
+            /* Adjust gallery to have space for buttons */
+            .gallery-section { padding: 0 50px; } 
+            
+            .photo { min-width: 280px; height: 350px; }
+            
+            /* No Button Hover Effect on PC */
+            #no-btn:hover { transform: scale(1.1); }
+        }
+
+        /* Mobile Rules (Max-width 480px) */
         @media (max-width: 480px) {
             .envelope-wrapper { width: 250px; height: 180px; }
             .envelope-flap { border-left: 125px solid transparent; border-right: 125px solid transparent; border-top: 90px solid var(--pink-dark); }
@@ -453,8 +502,11 @@
         </div>
         
         <section class="gallery-section" aria-labelledby="gallery-heading">
-            <h2 id="gallery-heading" class="section-title">Our Beautiful Memories</h2>
+            <h2 id="gallery-heading" class="section-title">Our Memories</h2>
             <p class="instruction"><i class="fas fa-hand-pointer"></i> Tap a photo to read a memory!</p>
+            
+            <button class="nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+            
             <div class="gallery-container">
                 <img src="1.jpg" alt="Us 1" class="photo" data-index="0">
                 <img src="2.jpg" alt="Us 2" class="photo" data-index="1">
@@ -464,6 +516,8 @@
                 <img src="5.jpg" alt="Us 5" class="photo" data-index="5">
                 <img src="6.jpg" alt="Us 6" class="photo" data-index="6">
             </div>
+            
+            <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
         </section>
         
         <section class="question-area" aria-labelledby="question">
@@ -473,11 +527,11 @@
                 <button id="no-btn" class="valentine-btn"><i class="fas fa-heart-broken"></i> No 😢</button>
             </div>
         </section>
-        
-        <footer>
-            <p>Made with <i class="fas fa-heart" style="color: #ff0066;"></i> for my forever Valentine</p>
-            <p class="signature">Love always, Your programmer baby</p>
-        </footer>
+      <footer>
+  <p>Made with <i class="fas fa-heart" style="color: #ff0066;"></i> for my forever Valentine</p>
+  <p class="signature">Love always, Your Aelred</p>
+</footer>
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -491,7 +545,7 @@
             "Memorable din toooo! My first time having a street food date! Waahhh. Tapos after neto, nag-walking tayo dun sa nakakatakot na daanan, and then we stopped by at the seawall para mag-chill and usap. Lahat 'yun first time ko gawin with my special someone, huhu. Thank you for letting me experience those things. ❤️",
             "Of course, our 4th dateee! Finally, kumain tayo sa fave mong kainan sa SD, which is sa Farmview! Also, yung picture mo, finally di ka na nagtatakip ng mukha wahahaha yehey! Pinapakita na yung pretty face niya! I love you! You're perfect, my baby!!✨",
             "5th date!! Super memorable kasi pinameet mo sakin si Tita T-T. Grabe kaba ko, as in WAHHH. Pasaway ka HAHAHA. Still, thank you for letting me meet your mother! I promise to be the first and last man na ipapakilala mo sa kanya. And then of course, sa Farmview ulit! First time having a picture with you! Sobrang nahiya ako... kung kelan game yung baby ko eh! AHAHAH sorry!!! Bawi ako, kasi alam kong super dami pa nating dates! Wahahahah.🌹",
-            "The \"My Day\" that started it all. This will forever be the most memorable picture of you para sa'kin. Dahil sa \"My Day\" mo na 'to, so many unexpected things happened in my life because of you. A lot of my \"first times\" were finally crossed out from my \"first time list.\" As you and I know, our relationship was really unexpected. Yung relationship natin, hindi tulad sa iba na reto-reto or nagsimula sa \"Hi po\" or what. Kakaiba yung sa'tin. An unexpected person, an unexpected time, and a love that's once in a lifetime. You weren't part of the plan, but now you're the whole story. You know that I love you so much that no words can express how much I love you. Kaya sabi ko nga, as always, I will prove my love through actions. I LOVE YOU, CHRISTINE. THANK YOU FOR EVERYTHING. I WILL NEVER, EVER LEAVE YOUR SIDE.❤️"
+            "The \"MyDay\" that started it all. This will forever be the most memorable picture of you para sa'kin. Dahil sa \"MyDay\" mo na 'to, so many unexpected things happened in my life because of you. A lot of my \"first times\" were finally crossed out from my \"first time list.\" As you and I know, our relationship was really unexpected. Yung relationship natin, hindi tulad sa iba na reto-reto or nagsimula sa \"Hi po\" or what. Kakaiba yung sa'tin. An unexpected person, an unexpected time, and a love that's once in a lifetime. You weren't part of the plan, but now you're the whole story. You know that I love you so much that no words can express how much I love you. Kaya sabi ko nga, as always, I will prove my love through actions. I LOVE YOU, CHRISTINE. THANK YOU FOR EVERYTHING. I WILL NEVER, EVER LEAVE YOUR SIDE.❤️"
         ];
 
         // --- BACKGROUND HEARTS ---
@@ -572,6 +626,21 @@
             }
         });
         
+        // --- PC CAROUSEL LOGIC (New) ---
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const galleryContainer = document.querySelector('.gallery-container');
+
+        if(prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                galleryContainer.scrollBy({ left: -250, behavior: 'smooth' });
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                galleryContainer.scrollBy({ left: 250, behavior: 'smooth' });
+            });
+        }
+        
         // --- YES / NO BUTTON LOGIC ---
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
@@ -650,7 +719,8 @@
             
             setTimeout(() => {
                 question.innerHTML = `
-                    See you on Feb 14th! 🌹<br><br>
+                Yeyyyy!<br>
+                    See you on Feb 14th! 🌹<br>
                     Will pick you up at 7:00 pm!<br>
                     I promise not to be late! 🤪
                 `;
@@ -700,6 +770,7 @@
             document.head.appendChild(style);
         }
         
+        // Initialize
         createFloatingHearts();
         setTimeout(() => envelope.style.animation = 'bounce 2s infinite', 500);
     </script>
